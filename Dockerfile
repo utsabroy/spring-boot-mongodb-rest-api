@@ -1,7 +1,7 @@
 # Build Stage
-FROM maven:3.6.3-adoptopenjdk-11 as build-env
 
-ARG JAR_PATH
+#################### USING MAVEN BUILD ################
+FROM maven:3.6.3-adoptopenjdk-11 as build-env
 
 VOLUME /tmp
 WORKDIR /
@@ -12,10 +12,11 @@ RUN mvn dependency:go-offline -B
 
 COPY ./src ./src
 
-RUN mvn -DskipTests package
-RUN mv /$JAR_PATH /app.jar
+RUN mvn package
+RUN ls
+RUN mv ./target/*.jar /*.jar
 
-# Package Stage
+#################### Package Stage ################
 FROM amazoncorretto:11-al2-full
 
 RUN yum install -y \
@@ -36,8 +37,8 @@ RUN useradd \
 WORKDIR /app
 USER appuser
 
-COPY --chown=appuser:appuser --from=build-env /app.jar .
+COPY --chown=appuser:appuser --from=build-env /*.jar .
 
 EXPOSE 8080
 
-CMD exec java $JAVA_OPTS -jar /app/app.jar
+CMD exec java $JAVA_OPTS -jar /app/*.jar
