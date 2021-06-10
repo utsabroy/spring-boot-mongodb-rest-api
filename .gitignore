@@ -1,0 +1,16 @@
+node_modules
+package-lock.json
+.vscode
+.idea
+
+#AWS
+.aws-sam
+.aws-sam/*
+samconfig.toml
+
+coverage
+
+# Mac
+src/.DS_Store
+
+.DS_Store
